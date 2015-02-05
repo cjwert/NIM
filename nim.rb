@@ -6,6 +6,7 @@ class Nim
 	# board configurations
 	@@config_one = [1,3,5,7]
 	@@config_two = [4,3,7]
+  @@current_config
 	def initialize
 		@continue = true
 		start_game
@@ -43,8 +44,12 @@ class Nim
 	
 	# get the user's input during each turn
 	def display_game
-	
+
 	end
+  
+  def player_move
+    
+  end
 
 	def smart_computer_player
 		puts "calling smart computer worked"
