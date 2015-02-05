@@ -16,6 +16,7 @@ class Nim
 	def play
 		#while continue
 		send(@computer_choice)		#calls computer method that user chose
+    player_move
 		#end
 	end
 	
@@ -26,6 +27,12 @@ class Nim
 		puts "Select board configuration (1-2):"
 		# get user choice
 		@board_choice = gets.chomp.to_i
+    # set the selected configuration
+    if( @board_choice == 1) 
+      @@current_config = @@config_one
+    elsif( @board_choice == 2)
+      @@current_config = @@config_two
+    end    
 		#use introspection to print computer players
 		count = 0
 		computer_options = Array.new #array to store all computer players found in methods during introspection
@@ -42,13 +49,20 @@ class Nim
 		play
 	end
 	
+  
 	# get the user's input during each turn
 	def display_game
 
 	end
   
   def player_move
-    
+    display_game
+    row_choice = 0
+    stick_choice = 0
+    puts "Enter the row (1-#{@@current_config.length}): "
+    gets row_choice.to_i
+    puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
+    gets stick_choice
   end
 
 	def smart_computer_player
