@@ -106,8 +106,37 @@ class Nim
 end
 
 def smart_computer_player
-  # TODO make baller
-  puts "    smart computer worked"
+  	# TODO make baller
+  	row = -1
+  	sticks = -1
+  	test = Array.new(@@current_config)
+  	test.each_with_index {|element, index|
+  		test = Array.new(@@current_config)
+  		result_flag = false
+  		if element > 0
+	  		for i in 0..element - 1
+	  			test[index] = i
+	  			if calc_xor(test) == 0
+	  				result_flag = true
+	  				break
+	  			end
+	  		end
+	  	end
+  		if result_flag
+  			row = index + 1
+  			sticks = @@current_config[index] - test[index]
+  			break
+  		end
+  	}
+  	puts "Row:#{row} Sticks:#{sticks}"
+end
+
+def calc_xor(data)
+	result = 0
+  	data.each {|element|
+  		result = result ^ element
+  	}
+  	return result
 end
 
 def dumb_computer_player
