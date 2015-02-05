@@ -14,10 +14,11 @@ class Nim
 	
 	# plays the game
 	def play
-		#while continue
-		#send(@computer_choice)		#calls computer method that user chose
+    continue = true
+		while continue
+		send(@computer_choice)		#calls computer method that user chose
     player_move
-		#end
+		end
 	end
 	
 	def start_game
@@ -68,13 +69,14 @@ class Nim
       row_choice = 0
       stick_choice = 0
       puts "Enter the row (1-#{@@current_config.length}): "
-      row_choice = gets.chomp.to_i
+      row_choice = gets.chomp.to_i - 1
       puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
       stick_choice = gets.chomp.to_i    
       
-      if row_choice < @@current_config.length && row_choice > 0
+      if row_choice < @@current_config.length && row_choice >= 0
         if stick_choice > 0 && stick_choice <= @@current_config[row_choice]
           @@current_config[row_choice] -= stick_choice
+          valid_move = true
         else
           puts "Invalid number of sticks!"
         end
