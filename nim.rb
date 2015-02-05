@@ -59,13 +59,26 @@ class Nim
 	end
   
   def player_move
-    display_game
-    row_choice = 0
-    stick_choice = 0
-    puts "Enter the row (1-#{@@current_config.length}): "
-    row_choice = gets.chomp.to_i
-    puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
-    stick_choice = gets.chomp.to_i
+    valid_move = false
+    while !valid_move
+      display_game
+      row_choice = 0
+      stick_choice = 0
+      puts "Enter the row (1-#{@@current_config.length}): "
+      row_choice = gets.chomp.to_i
+      puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
+      stick_choice = gets.chomp.to_i    
+      
+      if row_choice < @@current_config.length && row_choice > 0
+        if stick_choice > 0 && stick_choice <= @@current_config[row_choice]
+          @@current_config[row_choice] -= stick_choice
+        else
+          puts "Invalid number of sticks!"
+        end
+      else
+        puts "Invalid row!"
+      end
+    end
   end
 
 	def smart_computer_player
