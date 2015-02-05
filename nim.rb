@@ -14,7 +14,7 @@ class Nim
 	# plays the game
 	def play
 		#while continue
-		send(@computer_choice)
+		send(@computer_choice)		#calls computer method that user chose
 		#end
 	end
 	
