@@ -14,10 +14,9 @@ class Nim
 	
 	# plays the game
 	def play
-    continue = true
-		while continue
-		send(@computer_choice)		#calls computer method that user chose
-    player_move
+		while true
+      send(@computer_choice)		#calls computer method that user chose
+      player_move
 		end
 	end
 	
@@ -62,19 +61,28 @@ class Nim
 		}
 	end
   
+  # allow the player to make a move
   def player_move
     valid_move = false
     while !valid_move
       display_game
       row_choice = 0
       stick_choice = 0
+      # get the user selections
       puts "Enter the row (1-#{@@current_config.length}): "
       row_choice = gets.chomp.to_i - 1
       puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
       stick_choice = gets.chomp.to_i    
-      
-      if row_choice < @@current_config.length && row_choice >= 0
+      # validate selections
+      valid_move = validate_move row_choice, stick_choice
+    end
+  end
+
+  # determines if a move is valid, if valid, makes move
+  def validate_move row_choice, stick_choice
+        if row_choice < @@current_config.length && row_choice >= 0
         if stick_choice > 0 && stick_choice <= @@current_config[row_choice]
+          # make move if valid
           @@current_config[row_choice] -= stick_choice
           valid_move = true
         else
@@ -83,16 +91,21 @@ class Nim
       else
         puts "Invalid row!"
       end
-    end
+      return valid_move
   end
-
+  
 	def smart_computer_player
 		puts "calling smart computer worked"
 	end
 
 	def dumb_computer_player
-		puts "calling dumb computer worked"
-	end
+		valid = false
+    while !valid
+      row = rand(0..@@current_config.length-1)
+      sticks = rand(0..@@current_config[row])
+      valid = validate_move row, sticks
+    end
+  end
 end
 
 game = Nim.new
