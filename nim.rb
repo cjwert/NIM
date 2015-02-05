@@ -82,53 +82,57 @@ class Nim
 
   # determines if a move is valid, if valid, makes move
   # player = true for human, false otherwise
-  def validate_move row_choice, stick_choice, player
+	def validate_move row_choice, stick_choice, player
         if row_choice < @@current_config.length && row_choice >= 0 # ensure row is valid
-          if stick_choice > 0 && stick_choice <= @@current_config[row_choice] # ensure number of sticks is valid
-          # make move if valid
-          @@current_config[row_choice] -= stick_choice
-          valid_move = true
-     	elsif player
-      		puts "Invalid number of sticks!"
-      	end
-  elsif player
-  	puts "Invalid row number!"
-  end
-  if valid_move
-        if is_game_over #check if game is over
-          @winner = player #set winner
-      end
-      if !player
-          puts "#{@computer_choice} took #{stick_choice} stick from row #{row_choice + 1}" #display move made by computer
-      end
-  end
-  return valid_move
-end
+          	if stick_choice > 0 && stick_choice <= @@current_config[row_choice] # ensure number of sticks is valid
+          		# make move if valid
+          		@@current_config[row_choice] -= stick_choice
+          		valid_move = true
+     		elsif player
+      			puts "Invalid number of sticks!"
+      		else
+      			puts "WTF"
+      		end
+ 		elsif player
+  			puts "Invalid row number!"
+  		end
+  		if valid_move
+        	if is_game_over #check if game is over
+        		@winner = player #set winner
+     		end
+      		if !player
+        		puts "#{@computer_choice} took #{stick_choice} stick from row #{row_choice + 1}" #display move made by computer
+     		end
+  		end
+  		return valid_move
+	end
 
 def smart_computer_player
-  	# TODO make baller
-  	row = -1
-  	sticks = -1
-  	test = Array.new(@@current_config)
-  	test.each_with_index {|element, index|
-  		test = Array.new(@@current_config)
-  		result_flag = false
-  		if element > 0
-	  		for i in 0..element - 1
-	  			test[index] = i
-	  			if calc_xor(test) == 0
-	  				result_flag = true
-	  				break
-	  			end
+  	if !is_game_over
+	  	row = -1
+	  	sticks = -1
+	  	test = Array.new(@@current_config)
+	  	test.each_with_index {|element, index|
+	  		test = Array.new(@@current_config)
+	  		result_flag = false
+	  		if element > 0
+		  		for i in 0..element - 1
+		  			test[index] = i
+		  			if calc_xor(test) == 0
+		  				result_flag = true
+		  				break
+		  			end
+		  		end
+		  	end
+	  		if result_flag
+	  			row = index
+	  			sticks = @@current_config[index] - test[index]
+	  			break
 	  		end
-	  	end
-  		if result_flag
-  			row = index + 1
-  			sticks = @@current_config[index] - test[index]
-  			break
-  		end
-  	}
-  	puts "Row:#{row} Sticks:#{sticks}"
+	  	}
+	  	# puts "Row:#{row} Sticks:#{sticks}"
+	    validate_move row, sticks, false # validate / make move
+	end
 end
 
 def calc_xor(data)
