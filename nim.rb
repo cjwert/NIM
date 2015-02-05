@@ -52,8 +52,10 @@ class Nim
   
 	# get the user's input during each turn
 	def display_game
-		@current_configuration.each_with_index {|row, index|
-			puts "Row #{index - 1}: #{row.times{ print'X' }"
+		@current_configuration.each.with_index(1) { |row, index|
+			puts "Row #{index - 1}: #{row.times{ print }}"
+      index += 1
+    puts "AYY"
 		}
 	end
   
