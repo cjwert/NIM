@@ -1,3 +1,7 @@
+#Christian Wert & Jacob Adelgren
+#Project: NIM
+#File: nim.rb
+
 class Nim 
 	# board configurations
 	@@config_one = [1,3,5,7]
