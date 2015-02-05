@@ -93,6 +93,18 @@ class Nim
 	def dumb_computer_player
 		puts "calling dumb computer worked"
 	end
+	
+	def is_game_over
+		sum = 0
+		@@current_config.each{|element|
+			sum += element
+		}
+		if sum > 0
+			return false
+		else
+			return true
+		end
+	end
 end
 
 game = Nim.new
