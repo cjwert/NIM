@@ -52,7 +52,9 @@ class Nim
   
 	# get the user's input during each turn
 	def display_game
-
+		@current_configuration.each_with_index {|row, index|
+			puts "Row #{index - 1}: #{row.times{ print'X' }"
+		}
 	end
   
   def player_move
