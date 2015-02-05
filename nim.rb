@@ -4,11 +4,11 @@
 
 class Nim 
 	# board configurations as class variables
-  
+
 	@@config_one = [1,3,5,7]
 	@@config_two = [4,3,7]
-  @@current_config
-  @winner = 0
+	@@current_config
+	@winner = 0
 	def initialize
 		@continue = true
 	end
@@ -16,12 +16,12 @@ class Nim
 	# plays the game
 	def play
 		while !is_game_over
-      player_move
-      send(@computer_choice)		#calls computer method that user chose
-		end
-    display_winner
+			player_move
+      		send(@computer_choice)		#calls computer method that user chose
+  		end
+  		display_winner
 	end
-	
+
 	def start_game
 		# display choices
 		puts "1: #{@@config_one}"
@@ -30,12 +30,12 @@ class Nim
 		# get user choice
 		@board_choice = gets.chomp.to_i
 		puts ""
-    # set the selected configuration
-    if( @board_choice == 1) 
-      @@current_config = @@config_one
-    elsif( @board_choice == 2)
-      @@current_config = @@config_two
-    end    
+	    # set the selected configuration
+	    if( @board_choice == 1) 
+	    	@@current_config = @@config_one
+	    elsif( @board_choice == 2)
+	    	@@current_config = @@config_two
+	    end    
 		#use introspection to print computer players
 		count = 0
 		computer_options = Array.new #array to store all computer players found in methods during introspection
@@ -53,7 +53,7 @@ class Nim
 		play
 	end
 	
-  
+
 	# get the user's input during each turn
 	def display_game
 		@@current_config.each.with_index(1) { |row, index|
@@ -62,23 +62,23 @@ class Nim
 			puts ""
 		}
 	end
-  
+
   # allow the player to make a move
-  def player_move
-    valid_move = false
-    while !valid_move
-      display_game
-      row_choice = 0
-      stick_choice = 0
-      # get the user selections
-      valid_input = false
-      puts "Enter the row (1-#{@@current_config.length}): "
-      row_choice = gets.chomp.to_i - 1
-      puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
-      stick_choice = gets.chomp.to_i    
-      valid_move = validate_move row_choice, stick_choice, true  # validate selections
-    end
-  end
+	def player_move
+	  	valid_move = false
+	  	while !valid_move
+	  		display_game
+	  		row_choice = 0
+	  		stick_choice = 0
+		    # get the user selections
+		    valid_input = false
+		    puts "Enter the row (1-#{@@current_config.length}): "
+		    row_choice = gets.chomp.to_i - 1
+		    puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
+		    stick_choice = gets.chomp.to_i    
+		    valid_move = validate_move row_choice, stick_choice, true  # validate selections
+	  	end
+	end
 
   # determines if a move is valid, if valid, makes move
   # player = true for human, false otherwise
@@ -86,76 +86,76 @@ class Nim
         if row_choice < @@current_config.length && row_choice >= 0 # ensure row is valid
           if stick_choice > 0 && stick_choice <= @@current_config[row_choice] # ensure number of sticks is valid
           # make move if valid
-            @@current_config[row_choice] -= stick_choice
-            valid_move = true
-          elsif player
-              puts "Invalid number of sticks!"
-          end
-      elsif player
-        puts "Invalid row number!"
-      end
-      if valid_move
+          @@current_config[row_choice] -= stick_choice
+          valid_move = true
+     	elsif player
+      		puts "Invalid number of sticks!"
+      	end
+  elsif player
+  	puts "Invalid row number!"
+  end
+  if valid_move
         if is_game_over #check if game is over
           @winner = player #set winner
-        end
-        if !player
+      end
+      if !player
           puts "#{@computer_choice} took #{stick_choice} stick from row #{row_choice + 1}" #display move made by computer
-        end
       end
-      return valid_move
   end
-  
-	def smart_computer_player
-  # TODO make baller
-		puts "    smart computer worked"
-	end
+  return valid_move
+end
 
-	def dumb_computer_player
-    if !is_game_over
-      valid = false
-      row = 0
-      sticks = 0
-      while !valid
-        row = rand(0..@@current_config.length-1) # choose random row
-        sticks = rand(0..@@current_config[row]) # choose random value in that row
-        valid = validate_move row, sticks, false # validate / make move
-      end
-    end
-  end
-			
-	def is_game_over
-		sum = 0
-		@@current_config.each{|element|
-			sum += element # sum up all of the rows
-		}
-		if sum > 0
-			return false
-		else
-			return true
-		end
+def smart_computer_player
+  # TODO make baller
+  puts "    smart computer worked"
+end
+
+def dumb_computer_player
+	if !is_game_over
+		valid = false
+		row = 0
+		sticks = 0
+		while !valid
+	        row = rand(0..@@current_config.length-1) # choose random row
+	        sticks = rand(0..@@current_config[row]) # choose random value in that row
+	        valid = validate_move row, sticks, false # validate / make move
+    	end
 	end
-  
-  def auto_play
-    @@current_config = @@config_one
-    while !is_game_over
-      # use introspection to call each computer player until game is over
-      self.methods.each {|method|
-        if /computer_player/ =~ method 
-          @computer_choice = method # set current player
-          send(method) # that player makes a move
-        end
-      }
-		end
-    display_winner
-  end
-  
-  def display_winner
+end
+
+def is_game_over
+	sum = 0
+	@@current_config.each{|element|
+		sum += element # sum up all of the rows
+	}
+	if sum > 0
+		return false
+	else
+		return true
+	end
+end
+
+def auto_play
+	@@current_config = @@config_one
+	while !is_game_over
+	  	# use introspection to call each computer player until game is over
+		self.methods.each {|method|
+		  	if /computer_player/ =~ method 
+		      	@computer_choice = method # set current player
+		      	send(method) # that player makes a move
+		  	end
+  		}
+	end
+display_winner
+end
+
+def display_winner
     if @winner # winner is true if human player won
-      puts "Congratulations, you win!"
+    	puts "Congratulations, you win!"
     else
-      puts "#{@computer_choice} wins the game!"
+    	puts "#{@computer_choice} wins the game!"
     end
-  end
+end
 end
 
 game = Nim.new
