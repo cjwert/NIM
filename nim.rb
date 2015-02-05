@@ -7,17 +7,18 @@ class Nim
 	@@config_one = [1,3,5,7]
 	@@config_two = [4,3,7]
   @@current_config
+  @winner = 0
 	def initialize
 		@continue = true
-		start_game
 	end
 	
 	# plays the game
 	def play
-		while true
-      send(@computer_choice)		#calls computer method that user chose
+		while !is_game_over
       player_move
+      send(@computer_choice)		#calls computer method that user chose
 		end
+    display_winner
 	end
 	
 	def start_game
@@ -69,46 +70,63 @@ class Nim
       row_choice = 0
       stick_choice = 0
       # get the user selections
+      valid_input = false
       puts "Enter the row (1-#{@@current_config.length}): "
       row_choice = gets.chomp.to_i - 1
       puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
       stick_choice = gets.chomp.to_i    
       # validate selections
-      valid_move = validate_move row_choice, stick_choice
+      valid_move = validate_move row_choice, stick_choice, true
     end
   end
 
   # determines if a move is valid, if valid, makes move
-  def validate_move row_choice, stick_choice
+  # player = true for human, false otherwise
+  def validate_move row_choice, stick_choice, player
         if row_choice < @@current_config.length && row_choice >= 0
         if stick_choice > 0 && stick_choice <= @@current_config[row_choice]
           # make move if valid
           @@current_config[row_choice] -= stick_choice
           valid_move = true
         else
-          puts "Invalid number of sticks!"
+          if player == 0
+            puts "Invalid number of sticks!"
+          end
         end
       else
-        puts "Invalid row!"
+        if player == 0
+          puts "Invalid row!"
+        end
+      end
+      if valid_move
+        if is_game_over #check if game is over
+          @winner = player #set winner
+        end
+        if !player
+          puts "#{@computer_choice} took #{stick_choice} stick from row #{row_choice + 1}"
+        end
       end
       return valid_move
   end
   
 	def smart_computer_player
-		puts "calling smart computer worked"
+		puts "
+    smart computer worked"
 	end
 
 	def dumb_computer_player
-		valid = false
-    while !valid
-      row = rand(0..@@current_config.length-1)
-      sticks = rand(0..@@current_config[row])
-      valid = validate_move row, sticks
+    if !is_game_over
+      valid = false
+      row = 0
+      sticks = 0
+      while !valid
+        row = rand(0..@@current_config.length-1) # choose random row
+        sticks = rand(0..@@current_config[row]) # choose random value in that row
+        valid = validate_move row, sticks, false
+      end
     end
   end
-		puts "calling dumb computer worked"
-	end
-	
+			
 	def is_game_over
 		sum = 0
 		@@current_config.each{|element|
@@ -120,6 +138,27 @@ class Nim
 			return true
 		end
 	end
+  
+  def auto_play
+    @@current_config = @@config_one
+    while !is_game_over
+      @computer_choice = "smart_computer_player"
+      smart_computer_player
+      @computer_choice = "dumb_computer_player"
+      dumb_computer_player
+		end
+    display_winner
+  end
+  
+  def display_winner
+    if @winner
+      puts "Congratulations, you win!"
+    else
+      puts "#{@computer_choice} wins the game!"
+    end
+  end
 end
 
 game = Nim.new
+game.start_game
+#game.auto_play
