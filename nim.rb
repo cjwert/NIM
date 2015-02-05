@@ -15,7 +15,7 @@ class Nim
 	# plays the game
 	def play
 		#while continue
-		send(@computer_choice)		#calls computer method that user chose
+		#send(@computer_choice)		#calls computer method that user chose
     player_move
 		#end
 	end
@@ -27,6 +27,7 @@ class Nim
 		puts "Select board configuration (1-2):"
 		# get user choice
 		@board_choice = gets.chomp.to_i
+		puts ""
     # set the selected configuration
     if( @board_choice == 1) 
       @@current_config = @@config_one
@@ -45,6 +46,7 @@ class Nim
 		}
 		puts "Select computer player (1-#{count}):"
 		computer_number = gets.chomp.to_i
+		puts ""
 		@computer_choice = computer_options[computer_number - 1]
 		play
 	end
@@ -53,8 +55,9 @@ class Nim
 	# get the user's input during each turn
 	def display_game
 		@@current_config.each.with_index(1) { |row, index|
-			puts "Row #{index - 1}: #{row.times{ print }}"
-      index += 1
+			print "Row #{index}: "
+			row.times{|num| print 'X'}
+			puts ""
 		}
 	end
   
