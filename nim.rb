@@ -52,10 +52,9 @@ class Nim
   
 	# get the user's input during each turn
 	def display_game
-		@current_configuration.each.with_index(1) { |row, index|
+		@@current_config.each.with_index(1) { |row, index|
 			puts "Row #{index - 1}: #{row.times{ print }}"
       index += 1
-    puts "AYY"
 		}
 	end
   
@@ -64,9 +63,9 @@ class Nim
     row_choice = 0
     stick_choice = 0
     puts "Enter the row (1-#{@@current_config.length}): "
-    gets row_choice.to_i
+    row_choice = gets.chomp.to_i
     puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
-    gets stick_choice
+    stick_choice = gets.chomp.to_i
   end
 
 	def smart_computer_player
