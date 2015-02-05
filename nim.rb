@@ -90,8 +90,6 @@ class Nim
           		valid_move = true
      		elsif player
       			puts "Invalid number of sticks!"
-      		else
-      			puts "WTF"
       		end
  		elsif player
   			puts "Invalid row number!"
@@ -170,12 +168,17 @@ end
 
 def auto_play
 	@@current_config = @@config_one
-	while !is_game_over
+	still_playing = true
+	while still_playing
 	  	# use introspection to call each computer player until game is over
 		self.methods.each {|method|
-		  	if /computer_player/ =~ method 
-		      	@computer_choice = method # set current player
-		      	send(method) # that player makes a move
+		  	if /computer_player/ =~ method
+				if  !is_game_over
+					@computer_choice = method # set current player
+					send(method) # that player makes a move
+				else
+					still_playing = false
+				end
 		  	end
   		}
 	end
@@ -192,5 +195,5 @@ end
 end
 
 game = Nim.new
-game.start_game
-#game.auto_play
+#game.start_game
+game.auto_play
