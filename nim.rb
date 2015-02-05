@@ -14,7 +14,7 @@ class Nim
 	# plays the game
 	def play
 		#while continue
-		
+		send(@computer_choice)
 		#end
 	end
 	
@@ -24,7 +24,20 @@ class Nim
 		puts "2: #{@@config_two}"
 		puts "Select board configuration (1-2):"
 		# get user choice
-		@choice = gets.chomp.to_i
+		@board_choice = gets.chomp.to_i
+		#use introspection to print computer players
+		count = 0
+		computer_options = Array.new #array to store all computer players found in methods during introspection
+		self.methods.each {|method|
+			if /computer_player/ =~ method
+				count += 1
+				computer_options.push(method)
+				puts "#{count}: #{method}"
+			end
+		}
+		puts "Select computer player (1-#{count}):"
+		computer_number = gets.chomp.to_i
+		@computer_choice = computer_options[computer_number - 1]
 		play
 	end
 	
@@ -32,4 +45,14 @@ class Nim
 	def display_game
 	
 	end
+
+	def smart_computer_player
+		puts "calling smart computer worked"
+	end
+
+	def dumb_computer_player
+		puts "calling dumb computer worked"
+	end
 end
+
+game = Nim.new
