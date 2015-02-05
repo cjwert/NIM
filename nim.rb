@@ -3,7 +3,8 @@
 #File: nim.rb
 
 class Nim 
-	# board configurations
+	# board configurations as class variables
+  
 	@@config_one = [1,3,5,7]
 	@@config_two = [4,3,7]
   @@current_config
@@ -75,43 +76,38 @@ class Nim
       row_choice = gets.chomp.to_i - 1
       puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
       stick_choice = gets.chomp.to_i    
-      # validate selections
-      valid_move = validate_move row_choice, stick_choice, true
+      valid_move = validate_move row_choice, stick_choice, true  # validate selections
     end
   end
 
   # determines if a move is valid, if valid, makes move
   # player = true for human, false otherwise
   def validate_move row_choice, stick_choice, player
-        if row_choice < @@current_config.length && row_choice >= 0
-        if stick_choice > 0 && stick_choice <= @@current_config[row_choice]
+        if row_choice < @@current_config.length && row_choice >= 0 # ensure row is valid
+          if stick_choice > 0 && stick_choice <= @@current_config[row_choice] # ensure number of sticks is valid
           # make move if valid
-          @@current_config[row_choice] -= stick_choice
-          valid_move = true
-        else
-          if player == 0
-            puts "Invalid number of sticks!"
+            @@current_config[row_choice] -= stick_choice
+            valid_move = true
+          elsif player
+              puts "Invalid number of sticks!"
           end
-        end
-      else
-        if player == 0
-          puts "Invalid row!"
-        end
+      elsif player
+        puts "Invalid row number!"
       end
       if valid_move
         if is_game_over #check if game is over
           @winner = player #set winner
         end
         if !player
-          puts "#{@computer_choice} took #{stick_choice} stick from row #{row_choice + 1}"
+          puts "#{@computer_choice} took #{stick_choice} stick from row #{row_choice + 1}" #display move made by computer
         end
       end
       return valid_move
   end
   
 	def smart_computer_player
-		puts "
-    smart computer worked"
+  # TODO make baller
+		puts "    smart computer worked"
 	end
 
 	def dumb_computer_player
@@ -122,7 +118,7 @@ class Nim
       while !valid
         row = rand(0..@@current_config.length-1) # choose random row
         sticks = rand(0..@@current_config[row]) # choose random value in that row
-        valid = validate_move row, sticks, false
+        valid = validate_move row, sticks, false # validate / make move
       end
     end
   end
@@ -130,7 +126,7 @@ class Nim
 	def is_game_over
 		sum = 0
 		@@current_config.each{|element|
-			sum += element
+			sum += element # sum up all of the rows
 		}
 		if sum > 0
 			return false
@@ -142,16 +138,19 @@ class Nim
   def auto_play
     @@current_config = @@config_one
     while !is_game_over
-      @computer_choice = "smart_computer_player"
-      smart_computer_player
-      @computer_choice = "dumb_computer_player"
-      dumb_computer_player
+      # use introspection to call each computer player until game is over
+      self.methods.each {|method|
+        if /computer_player/ =~ method 
+          @computer_choice = method # set current player
+          send(method) # that player makes a move
+        end
+      }
 		end
     display_winner
   end
   
   def display_winner
-    if @winner
+    if @winner # winner is true if human player won
       puts "Congratulations, you win!"
     else
       puts "#{@computer_choice} wins the game!"
