@@ -7,14 +7,14 @@ class Nim
 
 	@@config_one = [1,3,5,7]
 	@@config_two = [4,3,7]
-	@@current_config
+	@current_config
 	@winner = 0
 	def initialize
 		@continue = true
 	end
 	
 	def set_for_autoplay
-		@@current_config = @@config_one
+		@current_config = @@config_one
 	end
 	
 	# plays the game
@@ -36,9 +36,9 @@ class Nim
 		puts ""
 	    # set the selected configuration
 	    if( @board_choice == 1) 
-	    	@@current_config = @@config_one
+	    	@current_config = @@config_one
 	    elsif( @board_choice == 2)
-	    	@@current_config = @@config_two
+	    	@current_config = @@config_two
 	    end    
 		#use introspection to print computer players
 		count = 0
@@ -60,7 +60,7 @@ class Nim
 
 	# get the user's input during each turn
 	def display_game
-		@@current_config.each.with_index(1) { |row, index|
+		@current_config.each.with_index(1) { |row, index|
 			print "Row #{index}: "
 			row.times{|num| print 'X'}
 			puts ""
@@ -76,9 +76,9 @@ class Nim
 	  		stick_choice = 0
 		    # get the user selections
 		    valid_input = false
-		    puts "Enter the row (1-#{@@current_config.length}): "
+		    puts "Enter the row (1-#{@current_config.length}): "
 		    row_choice = gets.chomp.to_i - 1
-		    puts "Enter the number of sticks (1-#{@@current_config[row_choice]}): "
+		    puts "Enter the number of sticks (1-#{@current_config[row_choice]}): "
 		    stick_choice = gets.chomp.to_i    
 		    valid_move = validate_move row_choice, stick_choice, true  # validate selections
 	  	end
@@ -87,10 +87,10 @@ class Nim
   # determines if a move is valid, if valid, makes move
   # player = true for human, false otherwise
 	def validate_move row_choice, stick_choice, player
-        if row_choice < @@current_config.length && row_choice >= 0 # ensure row is valid
-          	if stick_choice > 0 && stick_choice <= @@current_config[row_choice] # ensure number of sticks is valid
+        if row_choice < @current_config.length && row_choice >= 0 # ensure row is valid
+          	if stick_choice > 0 && stick_choice <= @current_config[row_choice] # ensure number of sticks is valid
           		# make move if valid
-          		@@current_config[row_choice] -= stick_choice
+          		@current_config[row_choice] -= stick_choice
           		valid_move = true
      		elsif player
       			puts "Invalid number of sticks!"
@@ -113,9 +113,9 @@ def smart_computer_player
   	if !is_game_over
 	  	row = -1
 	  	sticks = -1
-	  	test = Array.new(@@current_config)
+	  	test = Array.new(@current_config)
 	  	test.each_with_index {|element, index|
-	  		test = Array.new(@@current_config)
+	  		test = Array.new(@current_config)
 	  		result_flag = false
 	  		if element > 0
 		  		for i in 0..element - 1
@@ -128,7 +128,7 @@ def smart_computer_player
 		  	end
 	  		if result_flag
 	  			row = index
-	  			sticks = @@current_config[index] - test[index]
+	  			sticks = @current_config[index] - test[index]
 	  			break
 	  		end
 	  	}
@@ -151,8 +151,8 @@ def dumb_computer_player
 		row = 0
 		sticks = 0
 		while !valid
-	        row = rand(0..@@current_config.length-1) # choose random row
-			sticks = rand(0..@@current_config[row]) # choose random value in that row
+	        row = rand(0..@current_config.length-1) # choose random row
+			sticks = rand(0..@current_config[row]) # choose random value in that row
 	        valid = validate_move row, sticks, false # validate / make move
     	end
 	end
@@ -160,7 +160,7 @@ end
 
 def is_game_over
 	sum = 0
-	@@current_config.each{|element|
+	@current_config.each{|element|
 		sum += element # sum up all of the rows
 	}
 	if sum > 0
