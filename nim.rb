@@ -13,6 +13,10 @@ class Nim
 		@continue = true
 	end
 	
+	def set_for_autoplay
+		@@current_config = @@config_one
+	end
+	
 	# plays the game
 	def play
 		while !is_game_over
@@ -148,7 +152,7 @@ def dumb_computer_player
 		sticks = 0
 		while !valid
 	        row = rand(0..@@current_config.length-1) # choose random row
-	        sticks = rand(0..@@current_config[row]) # choose random value in that row
+			sticks = rand(0..@@current_config[row]) # choose random value in that row
 	        valid = validate_move row, sticks, false # validate / make move
     	end
 	end
@@ -166,25 +170,6 @@ def is_game_over
 	end
 end
 
-def auto_play
-	@@current_config = @@config_one
-	still_playing = true
-	while still_playing
-	  	# use introspection to call each computer player until game is over
-		self.methods.each {|method|
-		  	if /computer_player/ =~ method
-				if  !is_game_over
-					@computer_choice = method # set current player
-					send(method) # that player makes a move
-				else
-					still_playing = false
-				end
-		  	end
-  		}
-	end
-display_winner
-end
-
 def display_winner
     if @winner # winner is true if human player won
     	puts "Congratulations, you win!"
@@ -194,6 +179,7 @@ def display_winner
 end
 end
 
-game = Nim.new
-#game.start_game
-game.auto_play
+if __FILE__ == $0
+	game = Nim.new
+	#game.start_game
+end
